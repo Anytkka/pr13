@@ -23,6 +23,13 @@
         // Сохраняем файл как user_{$id} с оригинальным расширением
         $fileInfo = pathinfo($photo['name']);
         $extension = isset($fileInfo['extension']) ? "." . $fileInfo['extension'] : "";
+
+		// разрешенные расшерния
+		$allowedExtensions = ['.png', '.jpg' '.jpeg'];
+		
+		//доп проверка
+		
+
         $filename = "user_{$id}{$extension}";
         $uploadPath = "../img/{$filename}";
         

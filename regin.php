@@ -44,7 +44,11 @@
 					<div class = "sub-name">Повторите пароль:</div>
 					<input name="_passwordCopy" type="password" placeholder="" onkeypress="return PressToEnter(event)"/>
 					<div class = "sub-name">Фотография:</div>
-					<input name="photo" type="file" accept=".png, .jpg, .jpeg, image/png, image/jpeg"/>
+					<input name="photo" type="file" accept=".png, .jpg, .jpeg, image/png, image/jpeg" onchange="previewImage(this)"/>
+
+					<!--  предпросмотр -->
+					<img id="preview" src="#" alt="Предпросмотр" style="width: 150px; height: 150px; object-fit: cover; margin-top: 10px; border: 1px solid #ccc; display: none;">
+					<div id="formatMessage" style="margin-top: 5px; font-size: 14px;"></div>
 					
 					<a href="login.php">Вернуться</a>
 					<input type="button" class="button" value="Зайти" onclick="RegIn()" style="margin-top: 0px;"/>
@@ -62,7 +66,38 @@
 		<script>
 			var loading = document.getElementsByClassName("loading")[0];
 			var button = document.getElementsByClassName("button")[0];
+					//  функция предпросмотра изображения
+					function previewImage(input) {
+		var preview = document.getElementById('preview');
+		
+		if (input.files && input.files[0]) {
+			var file = input.files[0];
+			var fileName = file.name;
 			
+			// Проверка формата
+			if(fileName.match(/\.(png|jpg|jpeg|gif)$/i)) {
+				// Формат правильный
+				document.getElementById('formatMessage').innerHTML = 'Норм Формат: ' + fileName.split('.').pop();
+				document.getElementById('formatMessage').style.color = 'green';
+				
+				// Предпросмотр
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					preview.src = e.target.result;
+					preview.style.display = 'block';
+				}
+				reader.readAsDataURL(file);
+			} else {
+				// Формат неправильный
+				document.getElementById('formatMessage').innerHTML = 'БЕЕ Ошибка! Только png, jpg, jpeg, gif';
+				document.getElementById('formatMessage').style.color = 'red';
+				preview.style.display = 'none';
+				input.value = '';
+			}
+		}
+	}
+	
+				
 			function RegIn() {
 				var _login = document.getElementsByName("_login")[0].value;
 				var _password = document.getElementsByName("_password")[0].value;
@@ -121,6 +156,7 @@
 					} else alert("Введите пароль.");
 				} else alert("Введите логин.");
 			}
+	
 			
 			function PressToEnter(e) {
 				if (e.keyCode == 13) {
